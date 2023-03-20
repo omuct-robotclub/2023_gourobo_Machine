@@ -6,15 +6,16 @@
 boolean ROS_Enable=1;//ROSに託すかどうか
 
 //========================構造体宣言============================
-typedef struct{//足回り構造体
-  int16_t motor0=0;
-  int16_t motor1=0;
-  int16_t motor2=0;
-  int16_t motor3=0;
-  uint16_t m_id=3;
-  uint16_t m_speed=0;
-  int m_deg=0;
-}ashimawari;
+typedef struct
+{ // 足回り構造体
+  int16_t motor0 = 0;
+  int16_t motor1 = 0;
+  int16_t motor2 = 0;
+  int16_t motor3 = 0;
+  uint16_t m_id = 3;
+  uint16_t m_speed = 0;
+  int m_deg = 0;
+} ashimawari;
 
 typedef struct{//センサー基盤構造体
   uint16_t s_id1=10;
@@ -126,7 +127,8 @@ unsigned char  hata_grab=0;//つかむ
 //===============================================================
 
 //===========================================関数宣言======================================
-int voba_move(savokiban sk){//サーボデーター送信
+int voba_move(savokiban sk)// サーボデーター送信
+{ 
   CAN.beginPacket(sk.v_id);
   CAN.write((unsigned char)sk.servo0);
   CAN.write((unsigned char)sk.servo1);
@@ -188,8 +190,9 @@ int asma_move(ashimawari *am){//足回り
   return motor_move(am->m_id,am->motor0+kaiten,am->motor1+kaiten,am->motor2+kaiten,am->motor3+kaiten);
 }
 
-void Sensor(int packetSize){//CANデーター受信
-  #ifdef CAN_Enable
+void Sensor(int packetSize)// CANデーター受信
+{ 
+#ifdef CAN_Enable
   unsigned char _rim0,_rim1;
   if(CAN.packetId()==seki.s_id1){
     seki.timestamp=CAN.read()|(CAN.read()<<8)|(CAN.read()<<16)|(CAN.read()<<24)|(CAN.read()<<32);
