@@ -217,7 +217,7 @@ int motor_move(int16_t id, int16_t m1, int16_t m2, int16_t m3, int16_t m4)// モ
 int asma_move(ashimawari *am)// 足回り
 { 
   int kaiten;
-  kaiten = ((JM.r2 * -1) + JM.l2) * (10 + sp * 10);
+  kaiten = ((JM.r2 * -1) + JM.l2) * (8 + sp * 8);
   am->motor0 = sin(am->m_deg * PI / 180) * am->m_speed;
   am->motor1 = sin((am->m_deg + 90) * PI / 180) * am->m_speed;
   am->motor2 = sin((am->m_deg + 180) * PI / 180) * am->m_speed;
@@ -273,9 +273,9 @@ void Sensor(int packetSize)// CANデーター受信
   if (CAN.packetId() == 20)
   {
     JM.left_stick_x = CAN.read() * -1;
-    JM.left_stick_y = CAN.read() * -1;
+    JM.left_stick_y = CAN.read();
     JM.right_stick_x = CAN.read() * -1;
-    JM.right_stick_y = CAN.read() * -1;
+    JM.right_stick_y = CAN.read();
     JM.l2 = CAN.read();
     JM.r2 = CAN.read();
     JM.buttons_1 = CAN.read();
@@ -345,7 +345,7 @@ void loop()
     if (JM.left_stick_x > 10 or JM.left_stick_y > 10 or JM.left_stick_x < -10 or JM.left_stick_y < -10 or JM.l2>10 or JM.r2>10)
     { // 足回り移動
       asma.m_deg = 135 - atan2(JM.left_stick_x, JM.left_stick_y) * 180 / PI;
-      asma.m_speed = hypot(JM.left_stick_x, JM.left_stick_y) * 60;
+      asma.m_speed = hypot(JM.left_stick_x, JM.left_stick_y) * 67;
       asma_move(&asma);
     }
     else
