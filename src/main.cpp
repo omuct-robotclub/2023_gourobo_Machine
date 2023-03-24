@@ -111,10 +111,12 @@ struct JoyMsg // ROSからコントローラーの信号を得る
 //   int16_t ang_vel; // 回転速度[rad/s] * 1000 左旋回が+ 右旋回が-
 // } __attribute__((packed));
 
-// struct CameraAngleMsg {//ID:21
-//   int16_t pitch; // 上下方向の角度[rad] * 1000 上が-　下が+
-//   int16_t yaw; // 左右方向の角度[rad] * 1000 左が+ 右が-
-// } __attribute__((packed));
+/**
+struct TargetVelocityMsg {//ID:20
+  int16_t vx; // 前後方向の速度[m/s] * 1000 前が+　後ろが-
+  int16_t vy; //　左右方向の速度[m/s] * 1000 左が+ 右が-
+  int16_t ang_vel; // 回転速度[rad/s] * 1000 左旋回が+ 右旋回が-
+} __attribute__((packed));
 
 // struct FireCommandMsg {//ID23
 //   bool enable; // 発射を行うかどうか trueなら発射する
@@ -372,14 +374,15 @@ void loop()
   seki2.rimit2 = 1 - digitalRead(RIMIT7);
   seki2.rimit3 = 1 - digitalRead(RIMIT8);
 
-  if(digitalRead(AUTOREFULY)){
-  //====================================足回り===========================================
-  if (RB_Share ^ shareb)
-  { // 回転スピード調整
-    shareb = RB_Share;
-    if (shareb)
-      sp = !sp;
-  }
+  if (digitalRead(AUTOREFULY))
+  {
+    //====================================足回り===========================================
+    if (RB_Share ^ shareb)
+    { // 回転スピード調整
+      shareb = RB_Share;
+      if (shareb)
+        sp = !sp;
+    }
 
   if (JM.left_stick_x > 10 or JM.left_stick_y > 10 or JM.left_stick_x < -10 or JM.left_stick_y < -10 or JM.l2 > 10 or JM.r2 > 10)
   { // 足回り移動
@@ -587,10 +590,17 @@ void loop()
              0);
   //=====================================================================
   }
-  zandan_send(zandan_calculate(analogRead(POTEN0),3680,131)+zandan_calculate(analogRead(POTEN1),2210,110));
-  // voba.servo1=0x7f-((CAM.pitch*0x7f/PI)/1000)+0x7f;//上下
-  // voba.servo2=((CAM.yaw*0x7f/PI)/1000)+0x7f;//左右
-  // voba_move(voba);
+  /*
+  voba.servo1=0x7f-((CAM.pitch*0x7f/PI)/1000)+0x7f;//上下
+  voba.servo2=((CAM.yaw*0x7f/PI)/1000)+0x7f;//左右
+  voba_move(voba);
+
+  motor_move(k3_id,
+                          0,
+                          0,
+                          0,
+                          0
+    );
 
   // motor_move(k3_id,
   //                         0,
